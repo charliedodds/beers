@@ -1,3 +1,6 @@
-main {
-  margin-bottom: 20rem;
+.BeerList {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 900px;
+  margin: 0 auto 15rem;
 }

@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import BeerList from './components/BeerList';
 import SearchBar from './components/SearchBar';
+import Instructions from './components/Instructions';
 
 import './App.module.scss';
 
@@ -13,6 +14,46 @@ const App = () => {
     acidicOnly: false,
   });
 
+  const getHighABVParam = (highABV) => {
+    return `abv_gt=${highABV ? '6' : '0'}&`;
+  };
+
+  const getBeerNameParam = (searchTerm) => {
+    return searchTerm ? `beer_name=${searchTerm}&` : '';
+  };
+
+  const getBrewedBeforeParam = (classicsOnly) => {
+    return classicsOnly ? `brewed_before=01-2010` : '';
+  };
+
+  const getParams = (highABV, searchTerm, classicsOnly) => {
+    return `${getHighABVParam(highABV)}${getBeerNameParam(
+      searchTerm
+    )}${getBrewedBeforeParam(classicsOnly)}`;
+  };
+
+  const getQueryString = (inputValues) => {
+    const { highABV, searchTerm, classicsOnly } = inputValues;
+    return `https://api.punkapi.com/v2/beers?${getParams(
+      highABV,
+      searchTerm,
+      classicsOnly
+    )}`;
+  };
+
+  const filterBeers = (inputValues, beers) => {
+    const { acidicOnly } = inputValues;
+    if (acidicOnly) {
+      return beers.filter((beer) => beer.ph && beer.ph < 4);
+    } else return beers;
+  };
+
+  const getBeers = async () => {
+    const response = await fetch(getQueryString(inputValues));
+    const data = await response.json();
+    setBeers(filterBeers(inputValues, data));
+  };
+
   const handleChange = (e) => {
     if (e.target.type === 'checkbox') {
       setInputValues({
@@ -24,34 +65,17 @@ const App = () => {
     }
   };
 
-  const getQueryString = (inputValues) => {
-    const { searchTerm, highABV } = inputValues;
-    return `https://api.punkapi.com/v2/beers?abv_gt=${highABV ? '6' : '0'}${
-      searchTerm ? `&beer_name=${searchTerm}` : ''
-    }`;
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     getBeers();
   };
-
-  const getBeers = async () => {
-    const response = await fetch(getQueryString(inputValues));
-    const data = await response.json();
-    setBeers(data);
-  };
-
-  useEffect(() => {
-    getBeers();
-  }, []);
 
   return (
     <>
       <header>
         <h1>Beers</h1>
       </header>
-      {beers && <BeerList beers={beers} />}
+      {(beers.length > 0 && <BeerList beers={beers} />) || <Instructions />}
       <SearchBar
         inputValues={inputValues}
         handleChange={handleChange}

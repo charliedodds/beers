@@ -1,8 +1,50 @@
-form {
+.SearchBar {
+  width: 100%;
+  background-color: lightblue;
   position: fixed;
   bottom: 0;
-  background-color: lightblue;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
+  form {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    margin: auto;
+    font-size: 1.8rem;
+
+    label {
+      margin: 0.5rem 0;
+    }
+
+    & > input {
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+    }
+
+    .checkboxesContainer {
+      display: flex;
+      justify-content: space-evenly;
+      align-items: baseline;
+      margin: 1rem 0;
+
+      .singleCheckboxContainer {
+        display: flex;
+        align-items: baseline;
+        input {
+          margin-left: 0.75rem;
+          cursor: pointer;
+          transform: scale(1.2);
+        }
+      }
+    }
+
+    button {
+      cursor: pointer;
+      background-color: white;
+      border: 0;
+      padding: 1rem;
+      font-family: inherit;
+      font-size: inherit;
+    }
+  }
 }

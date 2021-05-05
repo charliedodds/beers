@@ -5,7 +5,7 @@ import styles from './BeerList.module.scss';
 
 const BeerFridge = ({ beers }) => {
   return (
-    <main>
+    <main className={styles.BeerList}>
       {beers.map((beer) => (
         <Beer key={beer.id} beer={beer} />
       ))}
